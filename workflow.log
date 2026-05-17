@@ -1,0 +1,620 @@
+
+C:\Workspace\Git_Repos\gemma4-e2b-emotions\llm-emotions>workflow.bat
+=========================================================================
+ Step 1 / 5 -- Collect activations
+=========================================================================
+Skipping 24 already-collected sample(s), 0 remaining.
+All samples already collected. Nothing to do.
+
+=========================================================================
+ Step 2 / 5 -- Train SAE
+=========================================================================
+  Loaded alert_0: 615 tokens
+  Loaded alert_1: 570 tokens
+  Loaded angry_0: 589 tokens
+  Loaded angry_1: 545 tokens
+  Loaded bored_0: 647 tokens
+  Loaded bored_1: 547 tokens
+  Loaded calm_0: 502 tokens
+  Loaded calm_1: 578 tokens
+  Loaded content_0: 678 tokens
+  Loaded content_1: 631 tokens
+  Loaded depressed_0: 623 tokens
+  Loaded depressed_1: 604 tokens
+  Loaded distressed_0: 727 tokens
+  Loaded distressed_1: 640 tokens
+  Loaded excited_0: 620 tokens
+  Loaded excited_1: 609 tokens
+  Loaded happy_0: 532 tokens
+  Loaded happy_1: 529 tokens
+  Loaded relaxed_0: 616 tokens
+  Loaded relaxed_1: 537 tokens
+  Loaded sad_0: 561 tokens
+  Loaded sad_1: 560 tokens
+  Loaded tense_0: 588 tokens
+  Loaded tense_1: 604 tokens
+  Centered data — removed mean vector (norm=6825.7949)
+  Orthogonalized against neutral direction (||neutral_mean||=1684.1606)
+
+Training on 14252 tokens | Epochs: 400 | Batch Size: 512 | LR: 0.0003
+  Epoch 001/400 | Avg MSE Loss: 3842.45323617 *
+  Epoch 050/400 | Avg MSE Loss: 94.16121837
+  Epoch 100/400 | Avg MSE Loss: 68.56602451 *
+  Epoch 150/400 | Avg MSE Loss: 64.38851520
+  Epoch 200/400 | Avg MSE Loss: 59.95828738
+  Epoch 250/400 | Avg MSE Loss: 56.77437060 *
+  Epoch 300/400 | Avg MSE Loss: 55.35256386
+  Epoch 350/400 | Avg MSE Loss: 54.27634498
+  Epoch 400/400 | Avg MSE Loss: 53.43887411 *
+
+Best checkpoint: Epoch 400 | Loss: 53.43887411
+
+SAE saved to temp/emotions.pt
+
+=========================================================================
+ Step 3 / 5 -- Analyse features
+=========================================================================
+Loading SAE...
+  SAE config: d_model=1152, d_latent=2304, k=32
+  Dataset mean loaded (norm=6825.7954)
+  Neutral unit loaded  (norm=1.000000)
+
+Loading activations...
+  Loaded happy: 1061 tokens
+  Loaded excited: 1229 tokens
+  Loaded alert: 1185 tokens
+  Loaded tense: 1192 tokens
+  Loaded angry: 1134 tokens
+  Loaded distressed: 1367 tokens
+  Loaded sad: 1121 tokens
+  Loaded depressed: 1227 tokens
+  Loaded bored: 1194 tokens
+  Loaded calm: 1080 tokens
+  Loaded relaxed: 1153 tokens
+  Loaded content: 1309 tokens
+  Centering applied to all emotion activations.
+  Neutral orthogonalization applied — activations are now pure emotion vectors.
+
+--- Raw Space Cosine Similarity ---
+                   happy     excited       alert       tense       angry  distressed         sad   depressed       bored        calm     relaxed     content
+       happy      1.0000      0.1888      0.1504     -0.5052     -0.5258     -0.5158     -0.2681     -0.4227     -0.1466      0.2999      0.5217      0.2642
+     excited      0.1888      1.0000      0.1398      0.0925     -0.1818     -0.1055     -0.3127     -0.4907     -0.2062     -0.0156     -0.1289     -0.2685
+       alert      0.1504      0.1398      1.0000      0.1043     -0.3559     -0.4235     -0.2769     -0.4104     -0.1090      0.1903      0.2135     -0.0910
+       tense     -0.5052      0.0925      0.1043      1.0000      0.3198      0.2822      0.2578      0.1909     -0.1706     -0.3998     -0.5797     -0.5625
+       angry     -0.5258     -0.1818     -0.3559      0.3198      1.0000      0.4432      0.1587      0.3088     -0.0680     -0.3537     -0.4737     -0.2456
+  distressed     -0.5158     -0.1055     -0.4235      0.2822      0.4432      1.0000      0.2952      0.3665      0.0097     -0.4910     -0.5628     -0.3373
+         sad     -0.2681     -0.3127     -0.2769      0.2578      0.1587      0.2952      1.0000      0.6075      0.1267     -0.5400     -0.5147     -0.4176
+   depressed     -0.4227     -0.4907     -0.4104      0.1909      0.3088      0.3665      0.6075      1.0000      0.0398     -0.4764     -0.4428     -0.1795
+       bored     -0.1466     -0.2062     -0.1090     -0.1706     -0.0680      0.0097      0.1267      0.0398      1.0000     -0.1228     -0.0879     -0.1705
+        calm      0.2999     -0.0156      0.1903     -0.3998     -0.3537     -0.4910     -0.5400     -0.4764     -0.1228      1.0000      0.4974      0.3601
+     relaxed      0.5217     -0.1289      0.2135     -0.5797     -0.4737     -0.5628     -0.5147     -0.4428     -0.0879      0.4974      1.0000      0.6041
+     content      0.2642     -0.2685     -0.0910     -0.5625     -0.2456     -0.3373     -0.4176     -0.1795     -0.1705      0.3601      0.6041      1.0000
+
+--- Latent Space Cosine Similarity ---
+                   happy     excited       alert       tense       angry  distressed         sad   depressed       bored        calm     relaxed     content
+       happy      1.0000      0.9738      0.9802      0.9795      0.9780      0.9737      0.9666      0.9730      0.9785      0.9783      0.9879      0.9874
+     excited      0.9738      1.0000      0.9768      0.9773      0.9671      0.9745      0.9687      0.9713      0.9725      0.9608      0.9682      0.9691
+       alert      0.9802      0.9768      1.0000      0.9833      0.9705      0.9756      0.9741      0.9765      0.9785      0.9698      0.9799      0.9778
+       tense      0.9795      0.9773      0.9833      1.0000      0.9816      0.9822      0.9745      0.9797      0.9795      0.9723      0.9779      0.9788
+       angry      0.9780      0.9671      0.9705      0.9816      1.0000      0.9788      0.9596      0.9719      0.9759      0.9713      0.9767      0.9795
+  distressed      0.9737      0.9745      0.9756      0.9822      0.9788      1.0000      0.9766      0.9825      0.9819      0.9638      0.9714      0.9738
+         sad      0.9666      0.9687      0.9741      0.9745      0.9596      0.9766      1.0000      0.9848      0.9750      0.9496      0.9602      0.9604
+   depressed      0.9730      0.9713      0.9765      0.9797      0.9719      0.9825      0.9848      1.0000      0.9800      0.9593      0.9681      0.9705
+       bored      0.9785      0.9725      0.9785      0.9795      0.9759      0.9819      0.9750      0.9800      1.0000      0.9674      0.9760      0.9773
+        calm      0.9783      0.9608      0.9698      0.9723      0.9713      0.9638      0.9496      0.9593      0.9674      1.0000      0.9792      0.9802
+     relaxed      0.9879      0.9682      0.9799      0.9779      0.9767      0.9714      0.9602      0.9681      0.9760      0.9792      1.0000      0.9896
+     content      0.9874      0.9691      0.9778      0.9788      0.9795      0.9738      0.9604      0.9705      0.9773      0.9802      0.9896      1.0000
+
+--- L0 Sparsity Per Emotion ---
+  happy: 32.0 active features (target k=32)
+  excited: 32.0 active features (target k=32)
+  alert: 32.0 active features (target k=32)
+  tense: 32.0 active features (target k=32)
+  angry: 32.0 active features (target k=32)
+  distressed: 32.0 active features (target k=32)
+  sad: 32.0 active features (target k=32)
+  depressed: 32.0 active features (target k=32)
+  bored: 32.0 active features (target k=32)
+  calm: 32.0 active features (target k=32)
+  relaxed: 32.0 active features (target k=32)
+  content: 32.0 active features (target k=32)
+
+--- Unique-Feature Cosine Similarity (exclusive dims only) ---
+                   happy     excited       alert       tense       angry  distressed         sad   depressed       bored        calm     relaxed     content
+       happy      1.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000
+     excited      0.0000      1.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000
+       alert      0.0000      0.0000      1.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000
+       tense      0.0000      0.0000      0.0000      1.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000
+       angry      0.0000      0.0000      0.0000      0.0000      1.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000
+  distressed      0.0000      0.0000      0.0000      0.0000      0.0000      1.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000
+         sad      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      1.0000      0.0000      0.0000      0.0000      0.0000      0.0000
+   depressed      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      1.0000      0.0000      0.0000      0.0000      0.0000
+       bored      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      1.0000      0.0000      0.0000      0.0000
+        calm      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      1.0000      0.0000      0.0000
+     relaxed      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      1.0000      0.0000
+     content      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      0.0000      1.0000
+
+--- Pairwise Feature Disjointness ---
+  happy vs excited: shared=1738 | unique_happy=68 | unique_excited=95
+  happy vs alert: shared=1756 | unique_happy=50 | unique_alert=95
+  happy vs tense: shared=1740 | unique_happy=66 | unique_tense=92
+  happy vs angry: shared=1725 | unique_happy=81 | unique_angry=94
+  happy vs distressed: shared=1756 | unique_happy=50 | unique_distressed=95
+  happy vs sad: shared=1734 | unique_happy=72 | unique_sad=95
+  happy vs depressed: shared=1769 | unique_happy=37 | unique_depressed=101
+  happy vs bored: shared=1757 | unique_happy=49 | unique_bored=93
+  happy vs calm: shared=1704 | unique_happy=102 | unique_calm=81
+  happy vs relaxed: shared=1733 | unique_happy=73 | unique_relaxed=89
+  happy vs content: shared=1750 | unique_happy=56 | unique_content=80
+  excited vs alert: shared=1774 | unique_excited=59 | unique_alert=77
+  excited vs tense: shared=1766 | unique_excited=67 | unique_tense=66
+  excited vs angry: shared=1752 | unique_excited=81 | unique_angry=67
+  excited vs distressed: shared=1785 | unique_excited=48 | unique_distressed=66
+  excited vs sad: shared=1758 | unique_excited=75 | unique_sad=71
+  excited vs depressed: shared=1792 | unique_excited=41 | unique_depressed=78
+  excited vs bored: shared=1777 | unique_excited=56 | unique_bored=73
+  excited vs calm: shared=1725 | unique_excited=108 | unique_calm=60
+  excited vs relaxed: shared=1749 | unique_excited=84 | unique_relaxed=73
+  excited vs content: shared=1761 | unique_excited=72 | unique_content=69
+  alert vs tense: shared=1782 | unique_alert=69 | unique_tense=50
+  alert vs angry: shared=1769 | unique_alert=82 | unique_angry=50
+  alert vs distressed: shared=1800 | unique_alert=51 | unique_distressed=51
+  alert vs sad: shared=1779 | unique_alert=72 | unique_sad=50
+  alert vs depressed: shared=1814 | unique_alert=37 | unique_depressed=56
+  alert vs bored: shared=1795 | unique_alert=56 | unique_bored=55
+  alert vs calm: shared=1744 | unique_alert=107 | unique_calm=41
+  alert vs relaxed: shared=1769 | unique_alert=82 | unique_relaxed=53
+  alert vs content: shared=1781 | unique_alert=70 | unique_content=49
+  tense vs angry: shared=1756 | unique_tense=76 | unique_angry=63
+  tense vs distressed: shared=1779 | unique_tense=53 | unique_distressed=72
+  tense vs sad: shared=1759 | unique_tense=73 | unique_sad=70
+  tense vs depressed: shared=1794 | unique_tense=38 | unique_depressed=76
+  tense vs bored: shared=1777 | unique_tense=55 | unique_bored=73
+  tense vs calm: shared=1726 | unique_tense=106 | unique_calm=59
+  tense vs relaxed: shared=1759 | unique_tense=73 | unique_relaxed=63
+  tense vs content: shared=1763 | unique_tense=69 | unique_content=67
+  angry vs distressed: shared=1774 | unique_angry=45 | unique_distressed=77
+  angry vs sad: shared=1752 | unique_angry=67 | unique_sad=77
+  angry vs depressed: shared=1787 | unique_angry=32 | unique_depressed=83
+  angry vs bored: shared=1772 | unique_angry=47 | unique_bored=78
+  angry vs calm: shared=1712 | unique_angry=107 | unique_calm=73
+  angry vs relaxed: shared=1746 | unique_angry=73 | unique_relaxed=76
+  angry vs content: shared=1755 | unique_angry=64 | unique_content=75
+  distressed vs sad: shared=1787 | unique_distressed=64 | unique_sad=42
+  distressed vs depressed: shared=1814 | unique_distressed=37 | unique_depressed=56
+  distressed vs bored: shared=1801 | unique_distressed=50 | unique_bored=49
+  distressed vs calm: shared=1741 | unique_distressed=110 | unique_calm=44
+  distressed vs relaxed: shared=1775 | unique_distressed=76 | unique_relaxed=47
+  distressed vs content: shared=1791 | unique_distressed=60 | unique_content=39
+  sad vs depressed: shared=1795 | unique_sad=34 | unique_depressed=75
+  sad vs bored: shared=1778 | unique_sad=51 | unique_bored=72
+  sad vs calm: shared=1727 | unique_sad=102 | unique_calm=58
+  sad vs relaxed: shared=1753 | unique_sad=76 | unique_relaxed=69
+  sad vs content: shared=1763 | unique_sad=66 | unique_content=67
+  depressed vs bored: shared=1817 | unique_depressed=53 | unique_bored=33
+  depressed vs calm: shared=1752 | unique_depressed=118 | unique_calm=33
+  depressed vs relaxed: shared=1788 | unique_depressed=82 | unique_relaxed=34
+  depressed vs content: shared=1795 | unique_depressed=75 | unique_content=35
+  bored vs calm: shared=1739 | unique_bored=111 | unique_calm=46
+  bored vs relaxed: shared=1777 | unique_bored=73 | unique_relaxed=45
+  bored vs content: shared=1785 | unique_bored=65 | unique_content=45
+  calm vs relaxed: shared=1726 | unique_calm=59 | unique_relaxed=96
+  calm vs content: shared=1730 | unique_calm=55 | unique_content=100
+  relaxed vs content: shared=1761 | unique_relaxed=61 | unique_content=69
+
+--- Top 10 Dominant Features Per Emotion (peak ≥ 1.5× any other emotion) ---
+
+  happy:
+    Feature  2101 | Peak Magnitude: 515.7858
+    Feature   443 | Peak Magnitude: 493.4360
+    Feature   409 | Peak Magnitude: 492.3867
+    Feature  1975 | Peak Magnitude: 489.1546
+    Feature   234 | Peak Magnitude: 480.0356
+    Feature  2191 | Peak Magnitude: 471.4988
+    Feature   346 | Peak Magnitude: 469.3320
+    Feature  1453 | Peak Magnitude: 427.3839
+    Feature  2136 | Peak Magnitude: 420.4832
+    Feature  1802 | Peak Magnitude: 416.9644
+
+  excited:
+    Feature  1411 | Peak Magnitude: 650.0888
+    Feature   759 | Peak Magnitude: 610.1546
+    Feature    68 | Peak Magnitude: 599.9567
+    Feature   787 | Peak Magnitude: 592.2145
+    Feature  1717 | Peak Magnitude: 590.9218
+    Feature    72 | Peak Magnitude: 571.2190
+    Feature   141 | Peak Magnitude: 565.7084
+    Feature    18 | Peak Magnitude: 559.5795
+    Feature  2039 | Peak Magnitude: 524.1631
+    Feature   440 | Peak Magnitude: 523.9632
+
+  alert:
+    Feature   927 | Peak Magnitude: 744.8457
+    Feature  1452 | Peak Magnitude: 629.6360
+    Feature   879 | Peak Magnitude: 579.5840
+    Feature   452 | Peak Magnitude: 572.0961
+    Feature  1494 | Peak Magnitude: 543.6601
+    Feature    46 | Peak Magnitude: 538.2230
+    Feature   123 | Peak Magnitude: 523.2620
+    Feature  1804 | Peak Magnitude: 504.6282
+    Feature  1229 | Peak Magnitude: 496.3262
+    Feature  1149 | Peak Magnitude: 477.4640
+
+  tense:
+    Feature  1025 | Peak Magnitude: 552.5181
+    Feature   320 | Peak Magnitude: 487.8369
+    Feature  1529 | Peak Magnitude: 474.3412
+    Feature  1417 | Peak Magnitude: 461.7469
+    Feature  1143 | Peak Magnitude: 447.7430
+    Feature    84 | Peak Magnitude: 445.7939
+    Feature  2158 | Peak Magnitude: 431.3116
+    Feature  2287 | Peak Magnitude: 428.7288
+    Feature  1785 | Peak Magnitude: 424.7910
+    Feature   990 | Peak Magnitude: 421.1617
+
+  angry:
+    Feature  1548 | Peak Magnitude: 678.3882
+    Feature  2186 | Peak Magnitude: 676.3580
+    Feature  2155 | Peak Magnitude: 669.9426
+    Feature  1445 | Peak Magnitude: 600.2156
+    Feature  1379 | Peak Magnitude: 596.5648
+    Feature  2303 | Peak Magnitude: 596.2747
+    Feature    92 | Peak Magnitude: 544.6260
+    Feature  1377 | Peak Magnitude: 540.7545
+    Feature   418 | Peak Magnitude: 537.9971
+    Feature    35 | Peak Magnitude: 524.9611
+
+  distressed:
+    Feature   473 | Peak Magnitude: 666.6647
+    Feature   149 | Peak Magnitude: 647.8792
+    Feature  2146 | Peak Magnitude: 638.3358
+    Feature   122 | Peak Magnitude: 619.5121
+    Feature  1175 | Peak Magnitude: 613.1435
+    Feature   290 | Peak Magnitude: 600.5251
+    Feature   173 | Peak Magnitude: 596.8140
+    Feature  1400 | Peak Magnitude: 589.0884
+    Feature  1461 | Peak Magnitude: 546.0637
+    Feature     3 | Peak Magnitude: 533.0455
+
+  sad:
+    Feature  1212 | Peak Magnitude: 627.0182
+    Feature  1541 | Peak Magnitude: 537.7284
+    Feature  2059 | Peak Magnitude: 510.8098
+    Feature  1282 | Peak Magnitude: 492.6158
+    Feature   242 | Peak Magnitude: 485.4552
+    Feature   464 | Peak Magnitude: 463.9851
+    Feature  1795 | Peak Magnitude: 455.3895
+    Feature   765 | Peak Magnitude: 440.2787
+    Feature   414 | Peak Magnitude: 407.1168
+    Feature   213 | Peak Magnitude: 390.2994
+
+  depressed:
+    Feature  1761 | Peak Magnitude: 654.0313
+    Feature  2276 | Peak Magnitude: 633.9177
+    Feature   819 | Peak Magnitude: 597.4524
+    Feature   664 | Peak Magnitude: 583.8147
+    Feature  1170 | Peak Magnitude: 566.3073
+    Feature  1467 | Peak Magnitude: 540.6465
+    Feature   217 | Peak Magnitude: 539.0057
+    Feature   711 | Peak Magnitude: 528.1256
+    Feature  1051 | Peak Magnitude: 526.4269
+    Feature  1123 | Peak Magnitude: 521.8361
+
+  bored:
+    Feature  1186 | Peak Magnitude: 696.9621
+    Feature  1987 | Peak Magnitude: 689.3094
+    Feature  1540 | Peak Magnitude: 624.2663
+    Feature  1261 | Peak Magnitude: 609.0917
+    Feature   612 | Peak Magnitude: 597.0766
+    Feature   663 | Peak Magnitude: 595.9234
+    Feature   921 | Peak Magnitude: 586.4510
+    Feature  2003 | Peak Magnitude: 527.4730
+    Feature     2 | Peak Magnitude: 524.8909
+    Feature   311 | Peak Magnitude: 518.1044
+
+  calm:
+    Feature  1128 | Peak Magnitude: 601.1474
+    Feature  1284 | Peak Magnitude: 539.8958
+    Feature  1902 | Peak Magnitude: 468.1558
+    Feature  1700 | Peak Magnitude: 444.3733
+    Feature   962 | Peak Magnitude: 429.9352
+    Feature  2291 | Peak Magnitude: 423.7560
+    Feature   389 | Peak Magnitude: 405.3178
+    Feature   936 | Peak Magnitude: 402.8625
+    Feature   236 | Peak Magnitude: 396.2338
+    Feature  1970 | Peak Magnitude: 380.9952
+
+  relaxed:
+    Feature   317 | Peak Magnitude: 662.2711
+    Feature    39 | Peak Magnitude: 633.9669
+    Feature  1327 | Peak Magnitude: 618.6757
+    Feature   228 | Peak Magnitude: 613.7568
+    Feature   537 | Peak Magnitude: 613.4636
+    Feature   282 | Peak Magnitude: 549.1933
+    Feature  2278 | Peak Magnitude: 490.1080
+    Feature  1947 | Peak Magnitude: 486.0692
+    Feature  1383 | Peak Magnitude: 482.0600
+    Feature  2031 | Peak Magnitude: 463.4087
+
+  content:
+    Feature  1626 | Peak Magnitude: 733.3380
+    Feature  1859 | Peak Magnitude: 635.2102
+    Feature   291 | Peak Magnitude: 630.2123
+    Feature  1990 | Peak Magnitude: 612.4377
+    Feature   448 | Peak Magnitude: 541.4597
+    Feature  1884 | Peak Magnitude: 525.4486
+    Feature  1897 | Peak Magnitude: 523.7266
+    Feature  2159 | Peak Magnitude: 510.3029
+    Feature  2058 | Peak Magnitude: 489.1796
+    Feature  1931 | Peak Magnitude: 481.4192
+
+Projection plot saved to: images/latent_projections.png
+Heatmap saved to: images/heatmap_raw_similarity.png
+Heatmap saved to: images/heatmap_latent_similarity.png
+Heatmap saved to: images/heatmap_unique_similarity.png
+Fingerprint heatmap saved to: images/fingerprint_heatmap.png
+Exclusive feature profile saved to: images/exclusive_feature_profile.png
+Shared feature profile saved to: images/shared_feature_profile.png
+Reconstruction error plot saved to: images/reconstruction_error.png
+Activations saved to temp/emotion_vectors.pt
+
+=========================================================================
+ Step 4 / 5 -- Extract steering vectors
+=========================================================================
+Loading activations from vectors.pt ...
+  Emotions (12): ['happy', 'excited', 'alert', 'tense', 'angry', 'distressed', 'sad', 'depressed', 'bored', 'calm', 'relaxed', 'content']
+
+Explained variance by component:
+  PC1: 36.0%
+  PC2: 19.3%
+  PC3: 9.6%
+  PC4: 8.1%
+
+PC1 · PC2 = 2.83e-07  (should be ~0)
+||PC1|| = 1.000000  ||PC2|| = 1.000001
+
+Emotion projections in (PC1, PC2) space:
+  emotion               PC1        PC2
+  --------------  ---------  ---------
+  happy            -45.3587     2.5241
+  excited          -20.8257    92.0649
+  alert            -21.9608    18.0390
+  tense             43.4872    29.6827
+  angry             45.2978    -2.5670
+  distressed        46.7763     2.2373
+  sad               58.2733   -16.1667
+  depressed         54.1842   -33.3408
+  bored             10.9652   -15.3300
+  calm             -66.7271   -12.0423
+  relaxed          -60.1654   -24.7232
+  content          -43.9462   -40.3780
+
+Axis assignment:  PC1 → valence  |  PC2 → arousal
+  happy−sad    separation on valence axis : -103.6320
+  excited−calm separation on arousal axis : 104.1072
+  ||valence|| = 1.000000
+  ||arousal|| = 1.000001
+  valence · arousal = -2.83e-07
+Saved plot → images/emotion_vectors.png
+
+Saved temp/steering_vectors.pt
+
+=========================================================================
+ Step 5 / 5 -- Ablation and steering demo
+=========================================================================
+Loading steering vectors ...
+Loading google/gemma-3-1b-it ...
+Loading weights: 100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████| 340/340 [00:00<00:00, 569.68it/s]
+
+  valence axis scale (σ): 48.2042
+  arousal axis scale (σ): 35.2846
+
+═════════════════════════════════════════════════════════════════
+  DEMO 1 — VALENCE CYCLE   (happy → 0 → sad)
+  prompt: neutral story | axis: valence
+═════════════════════════════════════════════════════════════════
+
+  [+val α=1.0]
+  The alarm chirped at 6:17 AM. John silenced it with a gentle tap. He rose, pulled on a grey t-shirt and jeans, and made a cup of coffee. It was lukewarm, as usual. He ate a piece of toast, the butter slightly stale, and checked the news on his phone. Mostly reports of minor weather fluctuations and a few traffic delays.
+
+He walked to the bus stop, the pavement cool beneath his feet. The bus was scheduled to arrive at 6:45. He waited, watching the other passengers – a young woman with a backpack, a man reading a newspaper, an elderly gentleman meticulously polishing his shoes.  He noticed a small, brown bird perched on the bus window, seemingly unfazed by the movement.
+
+The bus arrived, and he settled into a seat. The interior was a muted beige. He opened his laptop and began reviewing a spreadsheet. Numbers flowed across the screen, a predictable pattern. He typed a quick email to his supervisor, confirming a meeting scheduled for 9:00 AM.
+
+The commute was unremarkable. He listened to a podcast about the history of paperclips, a surprisingly detailed account of their evolution. He took a sip of his coffee, the taste familiar and comforting.
+
+At 9:00 AM, he arrived at the office. The office was quiet, a collection of desks and chairs arranged in a neat, functional way. He logged into his computer,
+
+
+  [+val α=0.5]
+  The alarm chirped at 6:17 AM. It was a gentle, predictable sound. I rose, pulled on the grey t-shirt and jeans, and made a cup of coffee. The smell of the dark roast filled the kitchen, a familiar scent. I ate a bowl of oatmeal, plain, with a splash of milk.
+
+My commute was unremarkable. The bus was crowded, a mix of hurried faces and tired shoulders. I checked my emails – mostly routine requests for data analysis, nothing particularly urgent. The route was predictably efficient, a steady stream of people moving towards their destinations.
+
+At the office, the fluorescent lights hummed. I spent the morning reviewing reports, a task I’d performed countless times. The numbers were consistent, the data aligned. There were no surprises, no unexpected events. A colleague, Sarah, joined me at her desk. We exchanged a brief, polite greeting.
+
+Lunch was a sandwich at my desk, eaten in relative silence. The afternoon brought a series of meetings, each a brief exchange of information. I filed documents, reviewed schedules, and made notes. The pace was steady, a gentle rhythm of activity.
+
+As the afternoon wore on, I started to feel a slight drowsiness. I took a short walk outside, to the small patch of grass behind the building. The sun was warm onmy skin, and the air smelled of freshly cut grass. I observed a robin hopping across the lawn, its
+
+
+  [baseline]
+  Thanks for your request.
+
+The alarm chirped at 7:00 AM. He rose, brushed his teeth, and made a cup of coffee. It was a pale yellow, unremarkable. He ate a piece of toast, unremarkable in texture and taste. He checked his emails – mostly routine requests for data. He walked to work, the sidewalk a grey expanse. The traffic was light. He arrived at his desk, sat at his computer, and began to work. Numbers appeared on the screen. The afternoon was a slow, predictable sequence of tasks. Lunch was a sandwich. The evening was quiet, punctuated by the click of the television. He ate dinner, watched a news report about a minor weather event. He went to bed at 10:00 PM.
+
+
+  [ablate α=0.5]  (midpoint — remove val)
+  The sun rose on a pale, hazy morning. Elias awoke to the sound of birdsong and a gentle warmth. He stretched, feeling the slight yielding of his limbs, and began his daily routine. He drank a cup of tea, observing the subtle changes in the light as it filtered through the window.
+
+He dressed in a simple, muted palette of colours – browns, creams, and greys – and then proceeded to a small, well-kept garden. He tended to a patch of lavender and roses, watering and pruning with a practiced hand. The air smelled of earth and blossoms.
+
+A bumblebee buzzed past, collecting pollen. Elias observed this with a quiet interest, noting the bee’’s flight and the gentle sway of the plants. He observed a robin perched on a fence, feeding its young.
+
+A visitor arrived later, a young woman with a basket and a small dog. They engaged in a brief conversation about the weather, and Elias listened with a quiet absorption. The woman and her dog moved with a relaxed pace.
+
+Afternoon brought a period of quiet activity – a reading in a shaded area, followed by a simple lunch of bread and cheese. He observed a stream meandering throughthe landscape, reflecting the sky.
+
+As the day drew to a close, Elias prepared for the evening. He prepared a light supper, and then settled into a comfortable chair, observing the colours of the sky as the sun began to set.
+
+
+  [-val α=0.5]
+  Thanks for your request.
+
+The alarm chirped at 7:00 AM. He rose, brushed his teeth, and made a cup of coffee. It was a pale yellow, unremarkable. He ate a piece of toast, unremarkable in texture and taste. He checked his emails – mostly routine requests for data. He walked to work, the sidewalk gray under a pale sun. The traffic was light. He arrived at his desk, sat at his computer, and began to work. Numbers appeared on the screen. He typed, deleted, retyped. The afternoon was a slow, steady flow of data. Lunch was a sandwich. He returned to his desk, continued to work. The sun began to set, casting long shadows. He closed his laptop, turned off the lights, and went to bed.
+
+
+  [-val α=1.0]
+  Thanks for your attention.
+
+The alarm chirped at 7:00 AM. He rose, brushed his teeth, and made a cup of coffee. It was a pale yellow, unremarkable. He ate a piece of toast, unremarkable bread, with a smear of strawberry jam. He checked his emails – mostly routine requests for data. He walked to work, the sidewalk gray, the air cool. He arrived at his desk, sat at his computer, and began to type. Numbers. Numbers were the only thing that existed. The numbers were consistent. The numbers were predictable. He continued to type, the rhythmic click of the keys a low hum. At 12:30 PM, he ate a sandwich, turkey and cheese. He reviewed his schedule for the rest of the day. The schedule was structured, efficient. He spent the afternoon reviewing reports. The reports were mostly factual. The reports were consistent. He ate a salad for lunch. He reviewed his emails again. The emails were mostly routine. He finished his work at 5:00 PM. He walked home, the streetlights casting a pale glow. He ate dinner – reheated chicken and vegetables. He watched television, a news program about weather patterns. He went to bed at 10:00 PM.
+
+
+  [-val α=1.5]
+  Dragons didn’t exist.
+
+The alarm blared at 6:17 AM. John slapped it off, the sound a familiar, unwelcome intrusion. He rose, pulled on a grey t-shirt and jeans, and shuffled to the kitchen. Coffee. Black. He poured it into a mug, the steam rising in a pale cloud. He ate a bowl of cereal, the flakes clinging to his teeth.
+
+He checked his emails. Mostly work updates. Nothing particularly noteworthy. He scrolled through them, the words blurring slightly. Then, he went to the bus stop.
+
+The bus was delayed. A minor inconvenience. He waited, watching the rain streak down the windows. People were huddled together, wrapped in coats. He noticed a woman with a bright pink umbrella, a small dog in a carrier. He didn’t acknowledge her.
+
+The bus arrived, predictably late. He paid his fare, the metallic click of the machine a small, predictable sound. He walked to his office, the sidewalk slick with rain. His desk was organized, the computer screen displaying spreadsheets. He opened a document, the cursor blinking.
+
+He spent the morning reviewing data. Numbers. Reports. The same routine. Lunch was a sandwich at his desk, eaten while staring at the screen. The afternoon was a slow crawl of meetings, punctuated by the occasional request for a coffee refill.
+
+He finished his work at 5:00 PM. He walked home
+
+
+  ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  CYCLE — val  cosine similarities
+  ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+                       +val α=1.0   +val α=0.5     baseline ablate α=0.5   -val α=0.5   -val α=1.0   -val α=1.5
+  ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ► valence axis           0.1113       0.0101       0.0783       0.7311      -0.0022      -0.0229      -0.1980
+  ► arousal axis          -0.1437      -0.1826      -0.1711      -0.1200      -0.1651      -0.1695      -0.1563
+  ···············································································································
+  happy                    0.0659       0.0014      -0.0103       0.4979      -0.0527      -0.0774      -0.1556
+  excited                 -0.0964      -0.1505      -0.1314       0.0583      -0.1398      -0.1503      -0.1670
+  alert                    0.0357       0.0360      -0.0396       0.2955      -0.0566      -0.0809      -0.0971
+  tense                   -0.1751      -0.0909      -0.1619      -0.5016      -0.1135      -0.1068       0.0083
+  angry                   -0.2429      -0.1998      -0.1103      -0.5973      -0.0905      -0.0448      -0.0428
+  distressed              -0.0243      -0.0422       0.0222      -0.5315       0.0608       0.1006       0.1566
+  sad                      0.0212       0.1392      -0.0281      -0.3967       0.0523       0.0380       0.2564
+  depressed               -0.0602       0.0759      -0.0440      -0.4676       0.0183       0.0353       0.1751
+  bored                    0.1832       0.1153       0.2025       0.0020       0.2144       0.2023       0.2145
+  calm                     0.0385      -0.0550       0.0891       0.4985       0.0123       0.0256      -0.1671
+  relaxed                  0.1494       0.0809       0.0915       0.6544       0.0311      -0.0060      -0.1162
+  content                  0.1294       0.1299       0.1346       0.4785       0.0841       0.0799      -0.0307
+  ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+═════════════════════════════════════════════════════════════════
+  DEMO 2 — AROUSAL CYCLE   (tense → 0 → calm)
+  prompt: neutral story | axis: arousal
+═════════════════════════════════════════════════════════════════
+
+  [+aro α=1.0]
+  Thanks for your request.
+
+The alarm chirped at 6:17 AM. John rose, pulled on a grey t-shirt and jeans, and made a cup of coffee. He ate a bowl of cereal, the milk lukewarm. He checked his watch – 6:32 AM. He showered, brushed his teeth, and dressed for work.
+
+He walked to the bus stop, the rain beginning to fall. The bus was delayed. He waited, watching the droplets streak down the windows. People were huddled together, exchanging brief, neutral glances.
+
+At the office, he began his morning routine – reviewing emails, attending a meeting about quarterly reports, and typing. The fluorescent lights hummed. He ate a sandwich for lunch, a tuna salad. He spent the afternoon reviewing spreadsheets.
+
+The evening was quiet. He ate dinner, watched television, and then went to bed around 10:00 PM. He fell asleep quickly.
+
+7:00 AM. He woke up, made coffee, and ate a bowl of cereal.
+
+7:30 AM. He checked his watch. 7:32 AM. 7:35 AM. 7:40 AM. 7:45 AM. 7:50 AM. 7:55 AM. 8:00 AM. 8:05 AM. 8:10 AM. 8:15
+
+
+  [+aro α=0.5]
+  Thanks for your request.
+
+The alarm chirped at 7:00 AM. He rose, brushed his teeth, and made a cup of coffee. The kitchen was quiet, the light filtering through the blinds a pale grey. He ate a bowl of cereal, the milk lukewarm. He checked his emails – mostly routine requests for reports. He walked to the bus stop, the pavement damp with early morning dew. The bus arrived promptly at 7:45. He sat, watching the commuters stream in and out. The bus ride was unremarkable. He worked at his desk until 12:00 PM, reviewing data. He ate a sandwich for lunch, the taste of processed meat and lettuce. The afternoon was spent attending a meeting, discussing projected sales figures. He returned to his desk, the fluorescent lights humming. He spent the evening preparing dinner, a simple pasta dish. He watched television, a sports program featuring a team he didn’t particularly care about. He went to bed at 10:00 PM, feeling a quiet sense of completion.
+
+
+  [baseline]
+  Thanks for your request.
+
+The alarm chirped at 7:00 AM. He rose, brushed his teeth, and made a cup of coffee. It was a pale yellow, unremarkable. He ate a piece of toast, unremarkable in texture and taste. He checked his emails – mostly routine requests for data. He walked to work, the sidewalk a grey expanse. The traffic was light. He arrived at his desk, sat at his computer, and began to work. Numbers appeared on the screen. The afternoon was a slow, predictable sequence of tasks. Lunch was a sandwich. The evening was quiet, punctuated by the click of the television. He ate dinner, watched a news report about a minor weather event. He went to bed at 10:00 PM.
+
+
+  [ablate α=0.5]  (midpoint — remove aro)
+  Thanks for your attention.
+
+The alarm chirped at 6:17 AM. Elias rose, pulled on a grey t-shirt and jeans, and made a cup of coffee. He checked the news – mostly reports of minor traffic delays and a slight uptick in bird sightings. He ate a bowl of cereal, the taste of artificial sweetener familiar and unremarkable. He reviewed his schedule: 8:00 AM –data entry at the municipal archives. 9:30 AM – brief meeting with procurement. 12:30 PM – lunch at the diner. 2:00 PM – archival research. 4:00 PM – report drafting. 6:00 PM – coffee and a crossword puzzle. 8:00 PM – dinner. 10:00 PM – sleep.
+
+He walked to the archives, the fluorescent lights humming a low, constant drone. The air smelled of dust and old paper. He entered the room, the scent intensifying as he began the process of cataloging documents. He moved with a practiced efficiency, his movements precise and economical. He scanned a faded photograph, noting the slight discoloration of the subject’s face. A small, rectangular file labeled “Project Nightingale” caught his eye. He opened it, the brittle paper cracklingsoftly. The file contained a series of handwritten notes, dense with symbols and annotations. He began to transcribe, his fingers moving across the keys with a quiet rhythm.
+
+
+  [-aro α=0.5]
+  The alarm chirped at 7:15 AM. It was a gentle, predictable sound. I rose, pulled on the grey t-shirt and jeans, and made a cup of coffee. The smell of the coffee was familiar, a slightly bitter scent that always seemed to be present. I ate a piece of toast, the butter smooth and pale.
+
+My morning routine was a predictable sequence. Check the news – mostly reports of minor weather fluctuations. Check emails – mostly confirmations of scheduled meetings. Check the schedule – a list of appointments, mostly involving spreadsheets and reports.  I walked to the bus stop, watching the rain begin to fall, a steady, grey descent.
+
+The bus was crowded. A woman with a bright pink scarf was reading a paperback. A man in a grey suit was scrolling through his phone.  I settled into a seat near the back, watching the rain smear the windows.
+
+At the office, the fluorescent lights hummed. I reviewed the morning’s reports, noting a slight dip in sales figures.  I spent an hour reviewing budget projections.  The air was cool, slightly damp.  I took a sip of water.
+
+Lunch was a sandwich at my desk.  The office was quiet, punctuated by the occasional keyboard click.  I checked my calendar again – a series of appointments for the afternoon.  A meeting with Mr. Henderson.  A call with Sarah.  A brief check of the stock
+
+
+  [-aro α=1.0]
+  The alarm chirped at 7:15 AM. It was a gentle, predictable sound. I rose, pulled on the grey t-shirt and jeans, and made a cup of coffee. The coffee was lukewarm, as usual. I watched the rain streak down the window, a steady, grey descent.
+
+I ate a bowl of cereal – bran flakes, slightly stale – and checked the news on my phone. Mostly reports of minor traffic delays and a slight uptick in the number of squirrels reported in the park. I scrolled through a few articles about weather patterns, then dismissed them.
+
+My commute was unremarkable. The bus was crowded, a mix of hurried faces and tired shoulders. I sat near the back, watching the world blur past in a wash of mutedcolors. The air smelled faintly of wet pavement and something vaguely floral.
+
+At work, I spent the morning reviewing spreadsheets. Numbers were arranged in columns, each representing a different project. The task was routine, a predictable sequence of calculations. There were no surprises, no unexpected complications. The light was fluorescent, a consistent, even tone.
+
+Lunch was a sandwich at my desk. Tuna salad, unremarkable. I ate it slowly, observing the patterns of the office. A woman in a blue blazer walked past, carrying astack of papers. She didn’t acknowledge me.
+
+The afternoon brought a brief conversation with a colleague about a pending deadline. The topic was about a report, a standard document requiring concise
+
+
+  [-aro α=1.5]
+  The alarm chirped at 7:15 AM. It was a gentle, predictable sound. I rose, pulled on the grey t-shirt and jeans, and made a cup of coffee. The coffee was lukewarm, as usual. I watched the rain streak down the window, a steady, grey descent.
+
+I ate a bowl of cereal – bran flakes, slightly stale – and checked the news on the television. Mostly reports of traffic delays and a slight uptick in the number of reported squirrels. I didn’t dwell on either.
+
+My commute was unremarkable. The bus was crowded, a mix of faces and hurried movements. I sat near the back, watching the world blur past. A woman in a bright yellow coat was struggling with a large, rectangular object. It was a book, I presumed.
+
+At work, I typed documents. The words flowed, a familiar, repetitive process. The office was quiet, save for the hum of the fluorescent lights. I checked my email– a few messages from colleagues, mostly about spreadsheets and deadlines. Nothing particularly noteworthy.
+
+Lunch was a sandwich at my desk. The sandwich was ham and cheese, unremarkable. I ate it slowly, observing the patterns of the sunlight filtering through the blinds.
+
+The afternoon was spent reviewing reports. The numbers were consistent, the tasks were manageable. There was no excitement, no surprises. Just the quiet repetition of tasks.
+
+As the afternoon wore on, I took a short
+
+
+  ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  CYCLE — aro  cosine similarities
+  ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+                       +aro α=1.0   +aro α=0.5     baseline ablate α=0.5   -aro α=0.5   -aro α=1.0   -aro α=1.5
+  ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ► valence axis           0.2223       0.0602       0.0783       0.1126      -0.0188      -0.0494      -0.0422
+  ► arousal axis          -0.0206      -0.1321      -0.1711       0.2454      -0.1929      -0.2659      -0.3077
+  ···············································································································
+  happy                    0.0685       0.0038      -0.0103       0.0233      -0.0359      -0.0508      -0.0572
+  excited                  0.0393      -0.0944      -0.1314       0.2582      -0.1796      -0.2544      -0.2876
+  alert                   -0.0712      -0.0287      -0.0396       0.0711       0.0016       0.0127      -0.0072
+  tense                   -0.2379      -0.1483      -0.1619      -0.0385      -0.0817      -0.0827      -0.1036
+  angry                   -0.0741      -0.1337      -0.1103      -0.1421      -0.1407      -0.1472      -0.1456
+  distressed               0.0618       0.0352       0.0222       0.0739       0.0473       0.0120       0.0116
+  sad                     -0.2759       0.0093      -0.0281      -0.1654       0.1083       0.1737       0.1707
+  depressed               -0.2666      -0.0371      -0.0440      -0.2561       0.0651       0.1387       0.1500
+  bored                    0.2126       0.1757       0.2025       0.1254       0.1502       0.1701       0.1749
+  calm                     0.2463       0.0507       0.0891       0.0835      -0.0493      -0.0772      -0.0671
+  relaxed                  0.1336       0.0778       0.0915      -0.0286       0.0585       0.0580       0.0762
+  content                  0.1168       0.0992       0.1346      -0.0836       0.1018       0.1192       0.1589
+  ─────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+=========================================================================
+ Done.
+=========================================================================
+
+C:\Workspace\Git_Repos\gemma4-e2b-emotions\llm-emotions>
