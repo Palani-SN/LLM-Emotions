@@ -78,6 +78,8 @@ The environment is optimised for an **NVIDIA RTX 4070** (or any CUDA 12.6-capabl
 
 ## Repository Layout
 
+- [Article](https://palani-sn.github.io/LLM1/ReadMe.html)
+
 ```
 llm-emotions/
 ├── workflow.bat               ← Master pipeline runner (5 ordered steps)
