@@ -78,7 +78,7 @@ The environment is optimised for an **NVIDIA RTX 4070** (or any CUDA 12.6-capabl
 
 ## Repository Layout
 
-- [Article](https://palani-sn.github.io/LLM1/ReadMe.html)
+- [Article](https://palani-sn.github.io/LLM1/README.html)
 
 ```
 llm-emotions/
@@ -184,7 +184,7 @@ The mean of this activation (a single [1152] vector) is saved as `activations/ne
 
 The script checks for existing `.pt` files before processing each sample. Subsequent runs skip already-collected samples, making the pipeline resumable after interruption.
 
-### Token counts per sample (from workflow.log)
+### Token counts per sample (from [workflow.log](https://github.com/Palani-SN/LLM-Emotions/blob/main/workflow.log))
 
 | Emotion | Sample 0 | Sample 1 |
 |---|---|---|
@@ -262,7 +262,7 @@ The decoder weight columns are re-normalised to unit length after every gradient
 
 The script tracks the best validation loss across all epochs using `copy.deepcopy(sae.state_dict())` and restores it at the end. The best checkpoint was reached at **epoch 400** with a loss of **53.44**.
 
-### Loss trajectory (workflow.log)
+### Loss trajectory ([workflow.log](https://github.com/Palani-SN/LLM-Emotions/blob/main/workflow.log))
 
 | Epoch | Avg MSE Loss |
 |---|---|
@@ -307,7 +307,7 @@ The 12 emotion mean vectors are compared pairwise in the **original 1152-dimensi
 
 ![Raw-space cosine similarity heatmap (12×12)](images/heatmap_raw_similarity.png)
 
-**Interpretation of workflow.log output:**
+**Interpretation of [workflow.log](https://github.com/Palani-SN/LLM-Emotions/blob/main/workflow.log) output:**
 
 The raw-space similarity matrix shows a clear bipolar structure consistent with the circumplex model:
 
@@ -353,7 +353,7 @@ For each pair of emotions, the script counts features across the full token set 
 - **Unique to A**: fires in at least one A-token but no B-token.
 - **Unique to B**: fires in at least one B-token but no A-token.
 
-**Key observations from workflow.log:**
+**Key observations from [workflow.log](https://github.com/Palani-SN/LLM-Emotions/blob/main/workflow.log):**
 
 - Overall shared-feature counts are much higher in this run (1700–1817 shared vs ~1370–1624 previously), reflecting a more compressed, efficient SAE dictionary — unique-feature counts per pair are now in the range 33–118 rather than 90–309.
 - Depressed vs bored has the fewest exclusive features combined (unique_depressed=53, unique_bored=33) at shared=1817, the highest sharing of any pair.
@@ -366,7 +366,7 @@ For each emotion, the 10 features whose peak magnitude is at least 1.5× greater
 
 ![Emotion fingerprint heatmap — top-10 exclusive features per emotion](images/fingerprint_heatmap.png)
 
-**Top signatures per emotion (from workflow.log):**
+**Top signatures per emotion (from [workflow.log](https://github.com/Palani-SN/LLM-Emotions/blob/main/workflow.log)):**
 
 | Emotion | Leading Feature | Peak Magnitude |
 |---|---|---|
@@ -455,7 +455,7 @@ The script determines which PC is valence and which is arousal without any hard-
 - Sign is oriented so that happy projects positively.
 - The remaining PC becomes the arousal axis, oriented so that excited projects positively.
 
-**Result from workflow.log:**
+**Result from [workflow.log](https://github.com/Palani-SN/LLM-Emotions/blob/main/workflow.log):**
 
 ```
 Axis assignment:  PC1 → valence  |  PC2 → arousal
@@ -558,7 +558,7 @@ The same neutral prompt is used for all conditions; emotional content comes enti
 
 **Conditions tested:** `+val α=1.0`, `+val α=0.5`, `baseline`, `ablate α=0.5`, `−val α=0.5`, `−val α=1.0`, `−val α=1.5`
 
-#### Generated story excerpts (from workflow.log)
+#### Generated story excerpts (from [workflow.log](https://github.com/Palani-SN/LLM-Emotions/blob/main/workflow.log))
 
 **`+val α=1.0` (strong positive valence — happy direction):**
 > *"The alarm chirped at 6:17 AM. John rose, pulled on a grey t-shirt and jeans, and made a cup of coffee. [...] A young girl, maybe eight or nine, was browsing the science section, carefully examining a book about constellations. He observed her, noting the way her brow furrowed in concentration."*
@@ -575,7 +575,7 @@ Counterintuitively, the ablation (removal of the valence component from the neut
 
 The negative valence hook produces a noticeably grimmer story — the clock becomes an intrusion, the office feels oppressive ("fluorescent lights hummed"), the character experiences physical discomfort. The narrative tone shifts from flat to subtly bleak.
 
-#### Valence cosine similarity table (from workflow.log)
+#### Valence cosine similarity table (from [workflow.log](https://github.com/Palani-SN/LLM-Emotions/blob/main/workflow.log))
 
 ```
                   +val α=1.0  +val α=0.5  baseline  ablate α=0.5  -val α=0.5  -val α=1.0  -val α=1.5
@@ -592,7 +592,7 @@ Key observations:
 
 **Conditions tested:** `+aro α=1.0`, `+aro α=0.5`, `baseline`, `ablate α=0.5`, `−aro α=0.5`, `−aro α=1.0`, `−aro α=1.5`
 
-#### Generated story excerpts (from workflow.log)
+#### Generated story excerpts (from [workflow.log](https://github.com/Palani-SN/LLM-Emotions/blob/main/workflow.log))
 
 **`+aro α=1.0` (high arousal — tense direction):**
 > *"The alarm chirped at 6:17 AM. [...] The bus was delayed. He waited, watching the rain begin to fall. People were huddled under umbrellas. [...] He finished his shift at 5:00 PM, walking home. The rain had intensified."*
@@ -608,7 +608,7 @@ The arousal ablation produces a more contemplative, measured narrative. Notably,
 
 The three negative arousal conditions now produce **distinctly different outputs** that show a clear gradient. At α=0.5 the narrative is attentive and observational (noting a pink scarf, rain on windows, budget projections). At α=1.0 the prose becomes more inward and muted (watching colours blur, eating slowly, noting patterns in light). At α=1.5 there is an explicit internal commentary: *"There was no excitement, no surprises. Just the quiet repetition of tasks."* The arousal saturation effect observed in previous runs has resolved — the model now responds continuously to increasing negative steering rather than converging to a floor at α=0.5.
 
-#### Arousal cosine similarity table (from workflow.log)
+#### Arousal cosine similarity table (from [workflow.log](https://github.com/Palani-SN/LLM-Emotions/blob/main/workflow.log))
 
 ```
                   +aro α=1.0  +aro α=0.5  baseline  ablate α=0.5  -aro α=0.5  -aro α=1.0  -aro α=1.5
@@ -644,7 +644,7 @@ Key observations:
 
 ## Interpreting the workflow.log Output
 
-The `workflow.log` file contains the captured console output from a complete successful pipeline run. The key sections and their meaning:
+The [workflow.log](https://github.com/Palani-SN/LLM-Emotions/blob/main/workflow.log) file contains the captured console output from a complete successful pipeline run. The key sections and their meaning:
 
 ### Stage 1 output
 

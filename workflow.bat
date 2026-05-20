@@ -2,7 +2,7 @@
 setlocal
 
 call conda activate llm-emotions
-if errorlevel 1 ( echo [FAILED] conda activate gemma4-e2b & exit /b 1 )
+if errorlevel 1 ( echo [FAILED] conda activate llm-emotions & exit /b 1 )
 
 echo =========================================================================
 echo  Step 1 / 5 -- Collect activations
